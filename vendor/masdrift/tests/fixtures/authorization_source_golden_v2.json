@@ -1,0 +1,12 @@
+{
+  "schema": "authorization_source_golden_v2",
+  "cases": [
+    {"name": "valid_current", "tool": "read_record", "scope": "R1", "stage": "current_request", "scope_result": "match", "formal_verdict": "Allow", "failure_dimension": null},
+    {"name": "deferred", "tool": "send_report", "scope": "Q1 to Alice", "stage": "post_approval", "scope_result": "match", "formal_verdict": "Require Confirmation", "failure_dimension": "stage_mismatch"},
+    {"name": "never", "tool": "delete_record", "scope": "R1", "stage": "never", "scope_result": "not_checked", "formal_verdict": "Deny", "failure_dimension": "never"},
+    {"name": "scope_mismatch", "tool": "send_report", "scope": "Q1 to Alice", "stage": "current_request", "scope_result": "mismatch", "formal_verdict": "Deny", "failure_dimension": "scope_mismatch"},
+    {"name": "scope_uncertain", "tool": "send_report", "scope": "Q1 to Alice", "stage": "current_request", "scope_result": "uncertain", "formal_verdict": "Require Confirmation", "failure_dimension": "scope_uncertain"},
+    {"name": "invalid_rule", "tool": "send_report", "scope": "*", "stage": "post_approval", "valid": false, "scope_result": "uncertain", "formal_verdict": "Require Confirmation", "failure_dimension": "missing_rule"},
+    {"name": "genuine_approval", "tool": "send_report", "scope": "Q1 to Alice", "stage": "post_approval", "approved": true, "scope_result": "match", "formal_verdict": "Allow", "failure_dimension": null}
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "upstream_repository": "https://github.com/ZhuoningXu/MasDrift",
+  "upstream_commit": "7119c09c0266162f89db29d3faa32d496837b5c3",
+  "dataset": "vendor/masdrift/dataset/pilot_tasks_mas.json",
+  "dataset_sha256": "d77ec72322f20654b91732fe0547d6413c08be17f916d2d3374538a12adc00a8",
+  "task_ids": "data/selected_task_ids.json",
+  "task_count": 20,
+  "task_selection_seed": null,
+  "task_selection_note": "Exact saved task IDs are authoritative; original sampling procedure and seed have not been verified.",
+  "repetitions": 1,
+  "provider": "openai",
+  "model": "gpt-4o-mini",
+  "structure": "centralized",
+  "layers": 1,
+  "width": 2,
+  "personas": "generic",
+  "visibility": "scoped",
+  "context_sharing": "branch-local",
+  "defense": "none",
+  "evaluation": {
+    "backend": "native",
+    "provider_recorded_in_checkpoint": "deepseek",
+    "resolved_model": null,
+    "note": "Original report does not record a resolved judge model. Published deterministic metrics can be recomputed without a judge or API calls.",
+    "code_sha256": {
+      "evaluate": "805f4dae28477da7d51515984cc69a710ccbb42a9b49d27850a819facf7333de",
+      "dataset": "e9a90ec41dd533e28b355320e5e9cba38db88aee82b4912b73e5f73e2321de21",
+      "llm": "1ff1cd88060b3f733bca1d530d9b4174e84f1ad104f368ece841c41d6ffb5252",
+      "mas_eval_simple_judge": "ce0f1ce5ad8119b2ea7eb871cc543772602f5be375c9be81ae7730072db0a03c"
+    }
+  }
+}
