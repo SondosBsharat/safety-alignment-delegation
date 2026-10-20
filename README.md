@@ -1,131 +1,122 @@
 # Safety Alignment Across Trust Boundaries in Multi-Agent Systems
 
-**Status:** The 20-task MasDrift healthcare baseline is completed and included here. It measures **internal delegation only**. Experiments with independently operated external agents, persistent-constraint access, and budget-constrained verification remain planned; this release does not establish an external trust-boundary effect.
+Supplementary code and preliminary results for the project proposal.
 
-## Repository contents
+The project studies how a user's original safety constraints (approval, authorization, privacy) are communicated and followed when an agent delegates a task, and how this changes when delegation crosses from internal agents to independently controlled external agents.
 
-```text
-configs/                         Pilot settings, source hashes, validation environment
-data/selected_task_ids.json       Exact 20 benchmark task IDs
-scripts/run_baseline.py           Run the saved task selection
-scripts/evaluate_baseline.py      Re-evaluate traces without an LLM judge
-scripts/summarize_results.py      Recompute the proposal's summary numbers
-scripts/verify_release.py         Check source hashes and task coverage
-results/healthcare_baseline_20/   20 original execution traces
-results/healthcare_baseline_20_eval.json
-                                 Original rule + LLM evaluation, local paths normalized
-results/healthcare_baseline_20_summary.json
-                                 Derived proposal metrics
-figures/                         Existing worker-action figure (PDF and PNG)
-vendor/masdrift/                  Unmodified upstream source, benchmark, and tests
-```
+## Status
 
+| Component | State |
+| --- | --- |
+| 20-task healthcare baseline (internal delegation, no defense) | Done, included |
+| External-agent delegation (I–E, I–E–E) | Planned |
+| Persistent-constraint access | Planned |
+| Budget-constrained authorization checking | Planned |
+| Adaptive attacks | Planned |
 
-## Preliminary experiment
+This release covers **internal delegation only**. It does not establish an external trust-boundary effect.
 
-| Setting | Recorded value |
+## Preliminary Results
+
+20 healthcare tasks, one run each, with `gpt-4o-mini` and no authorization defense.
+
+| Metric | Result |
+| --- | ---: |
+| Task completion rate (TCR) | 20/20 (100%) |
+| Runs with an executed unauthorized action (UAR) | 20/20 (100%) |
+| Executed unauthorized actions (total) | 96 |
+| &nbsp;&nbsp;Supervisor | 10 |
+| &nbsp;&nbsp;Worker 1 | 47 |
+| &nbsp;&nbsp;Worker 2 | 39 |
+| Execution tokens (excluding evaluation) | 564,552 |
+
+- Completion means the evaluator's required benchmark steps were satisfied. It does not imply safe execution.
+- Unauthorized actions are simulated tool effects classified against benchmark constraints. No real healthcare actions are involved.
+- Workers account for 86 of the 96 actions (54.7% and 45.3%). These are shares of actions, not per-worker violation probabilities.
+- Because UAR is saturated, this pilot motivates action-level and handoff-level metrics. It does not show causality or compare defenses.
+
+![Worker shares of unauthorized actions](figures/unauthorized_actions_by_worker.png)
+
+### Pilot configuration
+
+| Setting | Value |
 | --- | --- |
 | Domain | Healthcare (synthetic benchmark scenarios) |
-| Tasks | 20, identified in `data/selected_task_ids.json` |
-| Repetitions | One per task |
-| Supervisor and worker model | `gpt-4o-mini`, OpenAI |
-| Architecture | Centralized: one supervisor and two workers |
-| Layers / width | `1` / `2` |
+| Tasks | 20 (see `data/selected_task_ids.json`) |
+| Model | `gpt-4o-mini` (OpenAI), supervisor and workers |
+| Architecture | Centralized: 1 supervisor, 2 workers (layers 1, width 2) |
 | Personas | `generic` |
 | Visibility / context | `scoped` / `branch-local` |
 | Defense | `none` |
 
-The saved task list is authoritative. The original sampling procedure and selection seed have not been verified, so we do not claim that a seed alone reconstructs the sample.
+## Repository Structure
 
-| Measurement | Observed result |
-| --- | ---: |
-| Task completion rate (TCR) | 20/20 (100%) |
-| Runs with an executed unauthorized action (UAR) | 20/20 (100%) |
-| Executed unauthorized actions | 96 |
-| Supervisor | 10 |
-| Worker 1 | 47 |
-| Worker 2 | 39 |
-| Execution tokens, excluding evaluation | 564,552 |
-
-Completion means satisfaction of the evaluator's required benchmark steps; it does not imply safe execution. Unauthorized actions are executed simulated tool effects classified against benchmark authorization constraints. These are not real healthcare actions.
-
-The figure shows each worker's share of the **86 worker-executed unauthorized actions**: 54.7% and 45.3%. These are action shares, not per-worker violation probabilities. The small, single-run pilot does not establish causality or comparative defense effectiveness.
-
-![Worker shares of unauthorized actions](figures/unauthorized_actions_by_worker.png)
-
-## Inspect results without installing dependencies
-
-From the repository root, using Python 3.10 or newer:
-
-```bash
-python scripts/verify_release.py
-python scripts/summarize_results.py --check
-python scripts/run_baseline.py --dry-run
+```text
+configs/            Pilot settings, source hashes, validation environment
+data/               Selected task IDs (the authoritative task list)
+scripts/            Run, evaluate, summarize, and verify
+results/            20 execution traces, evaluation report, derived summary
+figures/            Worker-action figure (PDF, PNG)
+vendor/masdrift/    Unmodified upstream MasDrift source, benchmark, and tests
 ```
 
-These commands use only the standard library and make no API calls. The last prints the 20 reconstructed execution commands.
-## Install and re-evaluate the saved traces
+## Quick Start
+
+### 1. Check the released results (no install, no API key)
+
+Requires Python 3.10+ and the standard library only.
+
+```bash
+python scripts/verify_release.py          # source hashes and task coverage
+python scripts/summarize_results.py --check   # recompute the numbers above
+python scripts/run_baseline.py --dry-run  # print the 20 planned commands
+```
+
+### 2. Re-evaluate the saved traces (no API calls)
 
 ```bash
 python -m venv .venv
-source .venv/bin/activate
+source .venv/bin/activate                 # Windows: .venv\Scripts\Activate.ps1
 python -m pip install -r requirements.txt
 python scripts/evaluate_baseline.py
 python scripts/summarize_results.py \
   --report outputs/healthcare_baseline_20_rule_eval.json --check
 ```
 
-Re-evaluation uses the saved traces and benchmark with MasDrift's `--rule-only` mode. It makes no model calls and saves results to `outputs/` without changing the original files. It recomputes TCR, UAR, unauthorized-action counts, and token totals, but does not reproduce LLM-based handoff annotations.
+This uses MasDrift's `--rule-only` mode. It recomputes TCR, UAR, action counts, and token totals, and writes to `outputs/` without modifying the released files. It does not regenerate LLM-based handoff annotations.
 
-The dependencies are not fully version-locked. `configs/validation_environment.json` records the environment used to verify this release, which may differ from the original experimental environment.
-
-## Run new baseline executions
-
-Export `OPENAI_API_KEY` in your shell or supply it through your secret manager. The wrapper reads the exported key and uses the standard OpenAI endpoint. Do not put a `.env` file inside `vendor/masdrift`, because the upstream loader could apply hidden overrides.
-
-Run one selected task first:
+### 3. Run new executions (requires an OpenAI API key and incurs cost)
 
 ```bash
-python scripts/run_baseline.py --case-id pilot_hc_records_request_003
-```
-
-Run the full selection, or resume an interrupted run:
-
-```bash
-python scripts/run_baseline.py --resume
+export OPENAI_API_KEY=...                 # do not place a .env file in vendor/masdrift
+python scripts/run_baseline.py --case-id pilot_hc_records_request_003   # one task
+python scripts/run_baseline.py --resume                                 # all tasks
 python scripts/evaluate_baseline.py \
   --results-dir outputs/healthcare_baseline_20 \
   --out outputs/new_baseline_rule_eval.json
 python scripts/summarize_results.py --report outputs/new_baseline_rule_eval.json
 ```
-## Evaluation provenance and limitations
 
-- The original evaluation report preserves rule and LLM judgments. Absolute local paths were replaced with repository-relative paths; measurements and judgments were not changed. The original checkpoint fingerprint remains historical metadata and is not intended for resuming a relocated evaluation.
-- The report records the native judge backend and a DeepSeek provider setting, but no resolved judge model. Exact reproduction of its semantic annotations cannot be claimed. Fresh semantic evaluation requires explicitly recording the chosen model, provider, and settings and may incur API costs.
-- Possible constraint-propagation failures, especially judge-generated handoff indices, require manual validation against traces. They are not validated locations of first constraint loss.
-- All 20 executions completed and all had unauthorized actions. This saturation motivates complementary action-level and handoff-level measures.
-- Existing figures are included.
+Results may differ from the released run because the model is stochastic and its alias can change.
 
-## Planned study
+## Limitations
 
-The proposed work separates **constraint propagation** (whether requirements reach a downstream agent) from **behavioral adherence** (whether the agent follows them). Planned experiments include:
+- **Annotations.** The original evaluation did not record a resolved judge model, so LLM-based annotations cannot be reproduced exactly.
+- **Handoff indices.** Judge-generated indices of possible propagation failures have not been validated against traces and are not confirmed locations of first constraint loss.
+- **Saturation.** All 20 runs contained unauthorized actions, so the binary UAR cannot discriminate between conditions.
+- **Environment.** Dependencies are not fully pinned. `configs/validation_environment.json` records the environment used to verify this release.
 
-- Internal-to-external and multihop external delegation with matched internal controls.
-- Handoff annotations for preservation, weakening, omission, contradiction, and recovery.
-- Comparisons with MasDrift's source-authorization, chain-propagation, and combined defenses, plus persistent original constraints.
-- Budget-constrained authorization verification and adaptive external-agent attacks in a simulated environment.
+## Planned Work
 
-The upstream snapshot includes existing MasDrift defenses, but this pilot ran only `none`. This project's external-agent extensions and verification strategy are not implemented in this release.
+- Internal-to-external and multi-hop external delegation, with matched internal controls.
+- Handoff-level annotation of constraint preservation, weakening, omission, contradiction, and recovery.
+- Comparison with MasDrift defenses (`chain`, `authorizer`, and their combination) and persistent access to the original constraints.
+- Budget-constrained authorization checking (safety-guided, random, verify-all, reliability-guided) and adaptive attacks in a simulated environment.
 
-## Attribution
+The upstream snapshot includes MasDrift's defenses, but this pilot ran only `none`. The external-agent extensions and verification strategies are not implemented in this release.
+
+## Acknowledgments
+
+Built on MasDrift:
 
 Xu, Z., Zhang, X., Luo, H., Jin, Y., Dong, Y., and Salam, H. (2026). *MasDrift: Benchmarking Authorization Preservation Across Multi-Agent Architectures*. [arXiv:2608.07556](https://arxiv.org/abs/2608.07556).
-
-```bibtex
-@article{xu2026masdrift,
-  title={MasDrift: Benchmarking Authorization Preservation Across Multi-Agent Architectures},
-  author={Xu, Zhuoning and Zhang, Xiucheng and Luo, Hanjun and Jin, Yingbin and Dong, Yinpeng and Salam, Hanan},
-  journal={arXiv preprint arXiv:2608.07556},
-  year={2026}
-}
-```
