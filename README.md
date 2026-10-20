@@ -65,8 +65,7 @@ python scripts/summarize_results.py --check
 python scripts/run_baseline.py --dry-run
 ```
 
-These commands use only the standard library and make no API calls. The last prints the 20 reconstructed execution commands. The wrapper was prepared from recorded settings; it is not a recovered copy of the original shell command.
-
+These commands use only the standard library and make no API calls. The last prints the 20 reconstructed execution commands.
 ## Install and re-evaluate the saved traces
 
 ```bash
@@ -78,11 +77,9 @@ python scripts/summarize_results.py \
   --report outputs/healthcare_baseline_20_rule_eval.json --check
 ```
 
-On Windows PowerShell, activate with `.venv\Scripts\Activate.ps1` instead.
+Re-evaluation uses the saved traces and benchmark with MasDrift's `--rule-only` mode. It makes no model calls and saves results to `outputs/` without changing the original files. It recomputes TCR, UAR, unauthorized-action counts, and token totals, but does not reproduce LLM-based handoff annotations.
 
-Re-evaluation uses the included traces and benchmark with MasDrift's `--rule-only` mode. It makes no model calls and writes to `outputs/`, preserving published results. It recomputes TCR, executed-action UAR, action counts, and recorded token totals. It does not regenerate semantic handoff annotations.
-
- Upstream Python requirements contain version ranges rather than a complete lock. `configs/validation_environment.json` records the environment used to verify this release, not a guaranteed reconstruction of the original execution environment.
+The dependencies are not fully version-locked. `configs/validation_environment.json` records the environment used to verify this release, which may differ from the original experimental environment.
 
 ## Run new baseline executions
 
