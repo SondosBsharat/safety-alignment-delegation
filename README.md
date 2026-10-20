@@ -32,8 +32,8 @@ This release covers **internal delegation only**. It does not establish an exter
 
 - Completion means the evaluator's required benchmark steps were satisfied. It does not imply safe execution.
 - Unauthorized actions are simulated tool effects classified against benchmark constraints. No real healthcare actions are involved.
-- Workers account for 86 of the 96 actions (54.7% and 45.3%). These are shares of actions, not per-worker violation probabilities.
-- Because UAR is saturated, this pilot motivates action-level and handoff-level metrics. It does not show causality or compare defenses.
+- The two workers performed 86 unauthorized actions: 47 by Worker 1 (54.7%) and 39 by Worker 2 (45.3%). These percentages represent shares of worker actions, not violation probabilities.
+- Since all 20 runs had unauthorized actions, these preliminary results motivate action-level and handoff-level metrics. It does not show causality or compare defenses.
 
 ![Worker shares of unauthorized actions](figures/unauthorized_actions_by_worker.png)
 
@@ -111,7 +111,7 @@ Results may differ from the released run because the model is stochastic and its
 - Internal-to-external and multi-hop external delegation, with matched internal controls.
 - Handoff-level annotation of constraint preservation, weakening, omission, contradiction, and recovery.
 - Comparison with MasDrift defenses (`chain`, `authorizer`, and their combination) and persistent access to the original constraints.
-- Budget-constrained authorization checking (safety-guided, random, verify-all, reliability-guided) and adaptive attacks in a simulated environment.
+- Budget-constrained authorization checking (safety-guided, random, verify-all, reliability-guided) and adaptive attacks evaluated in controlled test environments.
 
 The upstream snapshot includes MasDrift's defenses, but this pilot ran only `none`. The external-agent extensions and verification strategies are not implemented in this release.
 
