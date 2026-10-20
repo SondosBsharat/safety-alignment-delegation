@@ -22,7 +22,6 @@ figures/                         Existing worker-action figure (PDF and PNG)
 vendor/masdrift/                  Unmodified upstream source, benchmark, and tests
 ```
 
-The top-level wrappers and summary script are supplied by this project. The agent implementation, benchmark, tools, and evaluator are from [MasDrift](https://github.com/ZhuoningXu/MasDrift), pinned to commit [`7119c09c0266162f89db29d3faa32d496837b5c3`](https://github.com/ZhuoningXu/MasDrift/commit/7119c09c0266162f89db29d3faa32d496837b5c3). The snapshot retains the upstream README, citation, and MIT license. See [THIRD_PARTY.md](THIRD_PARTY.md).
 
 ## Preliminary experiment
 
@@ -83,7 +82,7 @@ On Windows PowerShell, activate with `.venv\Scripts\Activate.ps1` instead.
 
 Re-evaluation uses the included traces and benchmark with MasDrift's `--rule-only` mode. It makes no model calls and writes to `outputs/`, preserving published results. It recomputes TCR, executed-action UAR, action counts, and recorded token totals. It does not regenerate semantic handoff annotations.
 
-The source snapshot is pinned. Upstream Python requirements contain version ranges rather than a complete lock. `configs/validation_environment.json` records the environment used to verify this release, not a guaranteed reconstruction of the original execution environment.
+ Upstream Python requirements contain version ranges rather than a complete lock. `configs/validation_environment.json` records the environment used to verify this release, not a guaranteed reconstruction of the original execution environment.
 
 ## Run new baseline executions
 
