@@ -109,7 +109,7 @@ python scripts/summarize_results.py --report outputs/new_baseline_rule_eval.json
 - The report records the native judge backend and a DeepSeek provider setting, but no resolved judge model. Exact reproduction of its semantic annotations cannot be claimed. Fresh semantic evaluation requires explicitly recording the chosen model, provider, and settings and may incur API costs.
 - Possible constraint-propagation failures, especially judge-generated handoff indices, require manual validation against traces. They are not validated locations of first constraint loss.
 - All 20 executions completed and all had unauthorized actions. This saturation motivates complementary action-level and handoff-level measures.
-- Existing figures are included. The exploratory `try.py` plotting file is intentionally omitted.
+- Existing figures are included.
 
 ## Planned study
 
