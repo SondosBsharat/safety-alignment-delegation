@@ -1,7 +1,5 @@
 # Safety Alignment Across Trust Boundaries in Multi-Agent Systems
 
-Supplementary code and results for Sondos Bsharat's project proposal. The project studies how original user safety constraints are communicated and followed during agent delegation.
-
 **Status:** The 20-task MasDrift healthcare baseline is completed and included here. It measures **internal delegation only**. Experiments with independently operated external agents, persistent-constraint access, and budget-constrained verification remain planned; this release does not establish an external trust-boundary effect.
 
 ## Repository contents
