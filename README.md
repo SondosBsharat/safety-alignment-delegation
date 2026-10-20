@@ -37,7 +37,7 @@ This release covers **internal delegation only**. It does not establish an exter
 
 ![Worker shares of unauthorized actions](figures/unauthorized_actions_by_worker.png)
 
-### Pilot configuration
+### Experiment Setup
 
 | Setting | Value |
 | --- | --- |
