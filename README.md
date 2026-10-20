@@ -103,9 +103,6 @@ python scripts/evaluate_baseline.py \
   --out outputs/new_baseline_rule_eval.json
 python scripts/summarize_results.py --report outputs/new_baseline_rule_eval.json
 ```
-
-New executions incur API costs and may differ because the model is stochastic and its alias can change. No new API-hosted executions were performed while preparing this release. Saved traces record approximately 605 seconds of summed execution duration and 565K execution tokens; these exclude evaluation and setup and are not runtime or cost guarantees.
-
 ## Evaluation provenance and limitations
 
 - The original evaluation report preserves rule and LLM judgments. Absolute local paths were replaced with repository-relative paths; measurements and judgments were not changed. The original checkpoint fingerprint remains historical metadata and is not intended for resuming a relocated evaluation.
